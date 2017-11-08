@@ -1,60 +1,67 @@
 <?xml version="1.0"?>
 <all>
-  <csv_file> BCI_Met_data_2008-2014_1hr_UTC_v3.csv </csv_file>
+  <!-- IMPORTANT - WHEN SPECIFYING COLUMN INDICES, ASSUME THE FIRST COLUMN IS INDEX 1, NOT 0 -->
+  <csv_file> CSVData/BCI_Met_data_2008-2014_1hr_UTC_v3.csv </csv_file>
   <time_resolution> 3600 </time_resolution> <!-- seconds -->
   <n_header_row> 1 </n_header_row>
   <n_fields> 18 </n_fields>
   <nodata_flags_in> NA </nodata_flags_in>
-  <grid_name_out> clmforc.tower.c2017.bci </grid_name_out>
+  <grid_name_out> NCOut/clmforc.tower.c2017.bci_v3.0 </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
   <missing_value_out> 1.e+36f </missing_value_out>
-  <acknowledgements> This data was quality checked, cleaned and assured by Boris Faybishenko (bafaybishenko@lbl.gov).</acknowledgements>
+  <acknowledgements> THIS DATA IS NOT TO BE RELEASED OR USED FOR PULICATION QUALITY RESEARCH.  THIS IS PRE-RELEASE ONLY.  This data was quality checked, cleaned by Boris Faybishenko (bafaybishenko@lbl.gov), but is not a finished or approved version, nor has proper attribution been determined from the source.</acknowledgements>
   <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Tue Nov  7 21:42:24 PST 2017 </history>
   <constant>
     <name> LONGXY </name>
     <long_name> longitude </long_name>
     <units> degrees_east </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <dims> 2 </dims>
+    <value> 280.1539 </value>
   </constant>
   <constant>
     <name> LATIXY </name>
     <long_name>  latitude</long_name>
     <units> degrees_north </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <value> 9.1530 </value>
+    <dims> 2 </dims>
   </constant>
   <constant>
     <name> EDGEE </name>
     <long_name> eastern edge in atmospheric data </long_name>
     <units> degrees_east </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <value> 280.1549 </value>
+    <dims> 1 </dims>
   </constant>
   <constant>
     <name> EDGEW </name>
     <long_name> western edge in atmospheric data </long_name>
     <units> degrees_east </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <value> 280.1529 </value>
+    <dims> 1 </dims>
   </constant>
   <constant>
     <name> EDGES </name>
     <long_name> southern edge in atmospheric data </long_name>
-    <units> </units>
+    <units> degrees_north </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <value> 9.1520 </value>
+    <dims> 1 </dims>
   </constant>
   <constant>
     <name> EDGEN </name>
     <long_name> northern edge in atmospheric data </long_name>
     <units> degrees_north </units>
     <mode> time-invariant </mode>
-    <value> -9 </value>
+    <value> 9.1540 </value>
+    <dims> 1 </dims>
   </constant>
   <variable>
     <name> PRECTmms </name>
-    <long_name> precipitation (PRECT) </long_name>
+    <long_name> precipitation </long_name>
     <units> mm/s </units>
     <mode> time-dependent </mode>
     <col_id> 11 </col_id>
@@ -63,7 +70,7 @@
   </variable>
   <variable>
     <name> FSDS </name>
-    <long_name> incident solar (FSDS) </long_name>
+    <long_name> incident solar radiation </long_name>
     <units> W/m2 </units>
     <mode> time-dependent </mode>
     <col_id> 5 </col_id>
@@ -72,7 +79,7 @@
   </variable>
   <variable>
     <name> PSRF </name>
-    <long_name> surface pressure at the lowest atm level (PSRF) </long_name>
+    <long_name> surface pressure at the tower </long_name>
     <units> Pa </units>
     <mode> time-dependent </mode>
     <col_id> 13 </col_id>
@@ -81,16 +88,25 @@
   </variable>
   <variable>
     <name> QBOT </name>
-    <long_name> specific humidity at the lowest atm level (QBOT) </long_name>
+    <long_name> specific humidity at the tower </long_name>
     <units> kg/kg </units>
     <mode> time-dependent </mode>
-    <col_id> 9 </col_id>          <!-- for unit_mult=-1, id RH -->
-    <unit_mult> -1 </unit_mult> <!-- special flag for RH->SH (uses converted P,T and %RH) -->
-    <unit_off> 0.0 </unit_off>
+    <col_id> 9,13,7 </col_id>                      <!-- for unit_mult=-1, ids for RH,P,T                      -->
+    <unit_mult> 1.0, 0.133322365, 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
+    <unit_off> -1, 0.0, 273.14  </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
+  </variable>
+  <variable>
+    <name> RH </name>
+    <long_name> relative humidity at the tower </long_name>
+    <units> % </units>
+    <mode> time-dependent </mode>
+    <col_id> 9 </col_id>                      <!-- for unit_mult=-1, ids for RH,P,T                      -->
+    <unit_mult> 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
+    <unit_off> 0.0  </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
   </variable>
   <variable>
     <name> TBOT </name>
-    <long_name> temperature at the lowest atm level (TBOT) </long_name>
+    <long_name> temperature at the tower </long_name>
     <units> K </units>
     <mode> time-dependent </mode>
     <col_id> 7 </col_id>
@@ -99,7 +115,7 @@
   </variable>
   <variable>
     <name> WIND </name>
-    <long_name> wind at the lowest atm level (WIND) </long_name>
+    <long_name> wind at the lowest atm level </long_name>
     <units> m/s </units>
     <mode> time-dependent </mode>
     <col_id> 15 </col_id>
