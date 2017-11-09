@@ -408,7 +408,7 @@ def main(argv):
 
         for imo in range(ima,imz+1):
 
-            ncfilename = ctrl_params.grid_name_out+"."+'{:04d}'.format(iyr)+"-"+'{:02d}'.format(imo)+".nc"
+            ncfilename = ctrl_params.grid_name_out+'{:04d}'.format(iyr)+"-"+'{:02d}'.format(imo)+".nc"
             print('Preparing: '+ncfilename)
 
             if(imo==12):

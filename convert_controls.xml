@@ -6,10 +6,10 @@
   <n_header_row> 1 </n_header_row>
   <n_fields> 18 </n_fields>
   <nodata_flags_in> NA </nodata_flags_in>
-  <grid_name_out> NCOut/clmforc.tower.c2017.bci_v3.0 </grid_name_out>
+  <grid_name_out> NCOut/bci_0.1x0.1_v3.0/CLM1PT_data/ </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
   <missing_value_out> 1.e+36f </missing_value_out>
-  <acknowledgements> THIS DATA IS NOT TO BE RELEASED OR USED FOR PULICATION QUALITY RESEARCH.  THIS IS PRE-RELEASE ONLY.  This data was quality checked, cleaned by Boris Faybishenko (bafaybishenko@lbl.gov), but is not a finished or approved version, nor has proper attribution been determined from the source.</acknowledgements>
+  <acknowledgements> THIS DATA IS NOT TO BE RELEASED OR USED FOR PULICATION QUALITY RESEARCH.  THIS IS PRE-RELEASE ONLY. Steve Patton has provided data. This data was quality checked, cleaned by Boris Faybishenko (bafaybishenko@lbl.gov), but is not a finished or approved version, nor has proper attribution been determined from the source.</acknowledgements>
   <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Tue Nov  7 21:42:24 PST 2017 </history>
   <constant>
     <name> LONGXY </name>
@@ -32,7 +32,7 @@
     <long_name> eastern edge in atmospheric data </long_name>
     <units> degrees_east </units>
     <mode> time-invariant </mode>
-    <value> 280.1549 </value>
+    <value> 280.2539 </value>
     <dims> 1 </dims>
   </constant>
   <constant>
@@ -40,7 +40,7 @@
     <long_name> western edge in atmospheric data </long_name>
     <units> degrees_east </units>
     <mode> time-invariant </mode>
-    <value> 280.1529 </value>
+    <value> 280.0539 </value>
     <dims> 1 </dims>
   </constant>
   <constant>
@@ -48,7 +48,7 @@
     <long_name> southern edge in atmospheric data </long_name>
     <units> degrees_north </units>
     <mode> time-invariant </mode>
-    <value> 9.1520 </value>
+    <value> 9.0530 </value>
     <dims> 1 </dims>
   </constant>
   <constant>
@@ -56,7 +56,7 @@
     <long_name> northern edge in atmospheric data </long_name>
     <units> degrees_north </units>
     <mode> time-invariant </mode>
-    <value> 9.1540 </value>
+    <value> 9.2530 </value>
     <dims> 1 </dims>
   </constant>
   <variable>
