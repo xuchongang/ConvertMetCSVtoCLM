@@ -333,20 +333,23 @@ def load_csv(ctrlp,variables):
 
                 t1 = date2num(datetime(int(yr1),int(mo1),int(dy1),int(hr1),int(mn1)))
                 t2 = date2num(datetime(int(yr2),int(mo2),int(dy2),int(hr2),int(mn2)))
+
                 teff = np.mean([t1,t2])
+                #teff = date2num(datetime(int(yr1),int(mo1),int(dy1),int(hr1),int(mn1)+30))
+
                 datestamp = num2date(teff)
 
-                if(datestamp.month==2 & datestamp.day==29):
-                    print('LEAP DAY')
-                    exit(2)
-                
                 rawtime.datenum[iidx] = teff
                 rawtime.year[iidx]  = datestamp.year
                 rawtime.month[iidx] = datestamp.month
                 rawtime.day[iidx]   = float(datestamp.day) + \
-                              float(datestamp.hour)/24.0 + \
-                              float(datestamp.minute)/1440.0 + \
-                              float(datestamp.second)/86400.0
+                                      float(datestamp.hour)/24.0 + \
+                                      float(datestamp.minute)/1440.0 + \
+                                      float(datestamp.second)/86400.0
+#                rawtime.day[iidx] = (float(datestamp.day)-1.0)*86400.0 + \
+#                                    float(datestamp.hour)*3600.0 + \
+#                                    float(datestamp.minute)*60.0 + \
+#                                    float(datestamp.second)
                 iidx+=1
 
     # Perform some visualization checks if this is turned on
@@ -378,6 +381,8 @@ def main(argv):
     xmlfile = interp_args(argv)
     
     constants,variables,ctrl_params = load_xml(xmlfile)
+
+    d_per_mo = [31,28,31,30,31,30,31,31,30,31,30,31]
 
 
     # Algorithm:
@@ -414,12 +419,22 @@ def main(argv):
             if(imo==12):
                 imo_end = 1
                 iyr_end = iyr+1
+                idy_end = 1
+                ihr_end = 0
+                imn_end = 0
+            elif(imo==2):
+                imo_end = 2
+                iyr_end = iyr
+                idy_end = 28
+                ihr_end = 23
+                imn_end = 59
             else:
                 imo_end = imo+1
                 iyr_end = iyr
+                idy_end = 1
 
             datenum_a = date2num(datetime(int(iyr),int(imo),int(1)))
-            datenum_b = date2num(datetime(int(iyr_end),int(imo_end),int(1)))
+            datenum_b = date2num(datetime(int(iyr),int(imo),int(d_per_mo[int(imo)-1]),int(23),int(59)))
 
             # Find all the time-points betwixt
             ids = np.where((timing.datenum>=datenum_a) & (timing.datenum<datenum_b))[0]
@@ -439,6 +454,7 @@ def main(argv):
             time_out[:] = timing.day[ids]-1.0
             time_out.units = 'days since {:04d}'.format(iyr)+'-{:02d}-01 00:00:00'.format(imo)
             time_out.calendar = 'noleap'
+            time_out.long_name = 'observation time'
 
             for var in variables:
                 var_out = fp.createVariable(var.name,'f',('time','lat','lon'))

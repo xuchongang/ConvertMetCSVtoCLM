@@ -6,7 +6,7 @@
   <n_header_row> 1 </n_header_row>
   <n_fields> 18 </n_fields>
   <nodata_flags_in> NA </nodata_flags_in>
-  <grid_name_out> NCOut/bci_0.1x0.1_v3.0/CLM1PT_data/ </grid_name_out>
+  <grid_name_out> NCOut/bci_0.1x0.1_v3.5/CLM1PT_data/ </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
   <missing_value_out> 1.e+36f </missing_value_out>
   <acknowledgements> THIS DATA IS NOT TO BE RELEASED OR USED FOR PULICATION QUALITY RESEARCH.  THIS IS PRE-RELEASE ONLY. Steve Patton has provided data. This data was quality checked, cleaned by Boris Faybishenko (bafaybishenko@lbl.gov), but is not a finished or approved version, nor has proper attribution been determined from the source.</acknowledgements>
