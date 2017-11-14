@@ -21,6 +21,7 @@ e_0              = 0.611       # saturation vapor pressure at 0C Clausius-Clapey
 L_vap            = 2.5*10.0**6 # Latent heat of vaporization [J/kg]
 R_vap            = 461.0       # gas constant for water vapor [J/Kg/K]
 T_0              = 273.0       # Temperature at freezing point of water [K]
+d_per_mo         = [31,28,31,30,31,30,31,31,30,31,30,31]  # Days per month (NO LEAP YEAR)
 
 
 # =======================================================================================
@@ -121,7 +122,7 @@ def rh100_to_qsat_kgkg(RH100,P_kpa,T_k):
     q_sat = epsilon * e_sat / P_kpa
     
     # RH100/100.0 = q/q_sat
-    q = RH100*q_sat/100.0
+    q = np.min([100.0,RH100])*q_sat/100.0
 
     return(q)
 
@@ -293,10 +294,11 @@ def load_csv(ctrlp,variables):
     print('Loading the CSV data into memory & converting units')
 
     nlines = 0
-    with open(ctrlp.csv_file, 'rb') as csvfile:
+    with open(ctrlp.csv_file, 'rU') as csvfile:
         
         csvfile.seek(ctrlp.n_header_row)
-        csvreader = csv.reader(csvfile, delimiter=',')
+        csvreader = csv.reader(csvfile,  dialect=csv.excel_tab, delimiter=',')
+#        csvreader = csv.reader(open(csvfile, 'rU'), dialect=csv.excel_tab)
         for row in csvreader:
             nlines+=1
 
@@ -311,7 +313,7 @@ def load_csv(ctrlp,variables):
 
         # Load raw data
         csvfile.seek(0)
-        csvreader = csv.reader(csvfile, delimiter=',')
+        csvreader = csv.reader(csvfile,  dialect=csv.excel_tab, delimiter=',')
         
         iidx=0
         for idx,rowtext in enumerate(csvreader):
@@ -322,8 +324,8 @@ def load_csv(ctrlp,variables):
                 fillvar_convert_units(variables,rowtext,iidx)
 
                 # Timing information
-                date_str1 = rowtext[0]
-                date_str2 = rowtext[1]
+                date_str1 = rowtext[1]
+                date_str2 = rowtext[2]
                 date1,time1 = date_str1.split(' ')
                 date2,time2 = date_str2.split(' ')
                 mo1,dy1,yr1 = date1.split('/')
@@ -331,8 +333,16 @@ def load_csv(ctrlp,variables):
                 hr1,mn1 = time1.split(':')
                 hr2,mn2 = time2.split(':')
 
-                t1 = date2num(datetime(int(yr1),int(mo1),int(dy1),int(hr1),int(mn1)))
-                t2 = date2num(datetime(int(yr2),int(mo2),int(dy2),int(hr2),int(mn2)))
+                iyr1 = int(yr1)
+                iyr2 = int(yr2)
+
+                if(iyr1<50):
+                    iyr1 +=2000
+                if(iyr2<50):
+                    iyr2 +=2000
+
+                t1 = date2num(datetime(iyr1,int(mo1),int(dy1),int(hr1),int(mn1)))
+                t2 = date2num(datetime(iyr2,int(mo2),int(dy2),int(hr2),int(mn2)))
 
                 teff = np.mean([t1,t2])
                 #teff = date2num(datetime(int(yr1),int(mo1),int(dy1),int(hr1),int(mn1)+30))
@@ -356,12 +366,12 @@ def load_csv(ctrlp,variables):
     if(simple_verify_ts):
 #        code.interact(local=locals())
         for var in variables:
-            plt.plot_date(rawtime.datenum[15000:30000],var.datavec[15000:30000])
+            plt.plot_date(rawtime.datenum,var.datavec)
             plt.title(var.name)
             plt.ylabel(var.units)
-            plt.xlabel('Date')
+            plt.xlabel('Date') 
             plt.show()
-
+            
         # Check the time variability
 #        plt.plot(rawtime.datenum[0:-2]-rawtime.datenum[1:-1])
 #        plt.show()
@@ -382,8 +392,7 @@ def main(argv):
     
     constants,variables,ctrl_params = load_xml(xmlfile)
 
-    d_per_mo = [31,28,31,30,31,30,31,31,30,31,30,31]
-
+    
 
     # Algorithm:
 
@@ -490,14 +499,7 @@ def main(argv):
 
             fp.close()
 
-
-
-#    code.interact(local=locals())
-
-
-
-
-
+    print('Conversion from CSV to ELM/CLM format complete!')
     exit(0)
 
 

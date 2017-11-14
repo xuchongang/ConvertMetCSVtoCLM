@@ -1,16 +1,24 @@
 <?xml version="1.0"?>
 <all>
   <!-- IMPORTANT - WHEN SPECIFYING COLUMN INDICES, ASSUME THE FIRST COLUMN IS INDEX 1, NOT 0 -->
-  <csv_file> CSVData/BCI_Met_data_2008-2014_1hr_UTC_v3.csv </csv_file>
+  <csv_file> CSVData/BCI_met_drivers_2003_2016_unix.csv </csv_file>
   <time_resolution> 3600 </time_resolution> <!-- seconds -->
   <n_header_row> 1 </n_header_row>
-  <n_fields> 18 </n_fields>
+  <n_fields> 19 </n_fields>
   <nodata_flags_in> NA </nodata_flags_in>
-  <grid_name_out> NCOut/bci_0.1x0.1_v3.5/CLM1PT_data/ </grid_name_out>
+  <grid_name_out> NCOut/bci_0.1x0.1_v4.0/CLM1PT_data/ </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
   <missing_value_out> 1.e+36f </missing_value_out>
-  <acknowledgements> THIS DATA IS NOT TO BE RELEASED OR USED FOR PULICATION QUALITY RESEARCH.  THIS IS PRE-RELEASE ONLY. Steve Patton has provided data. This data was quality checked, cleaned by Boris Faybishenko (bafaybishenko@lbl.gov), but is not a finished or approved version, nor has proper attribution been determined from the source.</acknowledgements>
-  <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Tue Nov  7 21:42:24 PST 2017 </history>
+  <acknowledgements> Usage of this driver data must make the following acknowledgements:  Steve Paton of the Smithsonian Tropical Research Institute was involved in providing original measurements, please acknowledge as "un-published data". Acknowledge that the Smithsonian Tropical Research Institue was the provider: http://biogeodb.stri.si.edu/physical_monitoring/research/barrocolorado. Acknowledge that data was quality assured and checked by Boris Faybishenko of Lawrence Berkeley National Laboratory.  The QA/QC process of the BCI time series datasets included removing outliers, gap filling, and time series aggregation of non equal time steps to create equally spaced time intervals for all variables.  Data was formatted for CLM/ELM rusage by Ryan Knox of Lawrence Berkeley National Laboratory. </acknowledgements>
+  <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Tue Nov 14 10:42:57 PST 2017 </history>
+  <constant>
+    <name> ZBOT </name>
+    <long_name> observational height </long_name>
+    <units> m </units>
+    <mode> time-invariant </mode>
+    <dims> 2 </dims>
+    <value> 30.0 </value>
+  </constant>
   <constant>
     <name> LONGXY </name>
     <long_name> longitude </long_name>
@@ -64,8 +72,8 @@
     <long_name> precipitation </long_name>
     <units> mm/s </units>
     <mode> time-dependent </mode>
-    <col_id> 11 </col_id>
-    <unit_mult> 0.016666666666666666 </unit_mult> <!-- mm/hr - mm/s -->
+    <col_id> 12 </col_id>
+    <unit_mult> 0.000011574 </unit_mult> <!-- mm/d - mm/s -->
     <unit_off> 0.0 </unit_off>
   </variable>
   <variable>
@@ -73,7 +81,7 @@
     <long_name> incident solar radiation </long_name>
     <units> W/m2 </units>
     <mode> time-dependent </mode>
-    <col_id> 5 </col_id>
+    <col_id> 6 </col_id>
     <unit_mult> 1.0 </unit_mult> <!-- w/m2 - w/m2 -->
     <unit_off> 0.0 </unit_off>
   </variable>
@@ -82,8 +90,8 @@
     <long_name> surface pressure at the tower </long_name>
     <units> Pa </units>
     <mode> time-dependent </mode>
-    <col_id> 13 </col_id>
-    <unit_mult> 133.322365 </unit_mult> <!--mmHg - Pa -->
+    <col_id> 14 </col_id>
+    <unit_mult> 100.0 </unit_mult> <!--hPa - Pa -->
     <unit_off> 0.0 </unit_off>
   </variable>
   <variable>
@@ -91,8 +99,8 @@
     <long_name> specific humidity at the tower </long_name>
     <units> kg/kg </units>
     <mode> time-dependent </mode>
-    <col_id> 9,13,7 </col_id>                      <!-- for unit_mult=-1, ids for RH,P,T                      -->
-    <unit_mult> 1.0, 0.133322365, 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
+    <col_id> 10,14,8 </col_id>                      <!-- for unit_mult=-1, ids for RH,P,T                      -->
+    <unit_mult> 1.0, 0.1, 1.0 </unit_mult>         <!-- RH must be in %, P is kPa, T is K                     -->
     <unit_off> -1, 0.0, 273.14  </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
   </variable>
   <variable>
@@ -100,16 +108,16 @@
     <long_name> relative humidity at the tower </long_name>
     <units> % </units>
     <mode> time-dependent </mode>
-    <col_id> 9 </col_id>                      <!-- for unit_mult=-1, ids for RH,P,T                      -->
-    <unit_mult> 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
-    <unit_off> 0.0  </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
+    <col_id> 10 </col_id>       
+    <unit_mult> 1.0 </unit_mult>
+    <unit_off> 0.0  </unit_off>
   </variable>
   <variable>
     <name> TBOT </name>
     <long_name> temperature at the tower </long_name>
     <units> K </units>
     <mode> time-dependent </mode>
-    <col_id> 7 </col_id>
+    <col_id> 8 </col_id>
     <unit_off> 273.14 </unit_off> <!-- C - K-->
     <unit_mult> 1.0 </unit_mult>
   </variable>
@@ -118,7 +126,7 @@
     <long_name> wind at the lowest atm level </long_name>
     <units> m/s </units>
     <mode> time-dependent </mode>
-    <col_id> 15 </col_id>
+    <col_id> 16 </col_id>
     <unit_mult> 0.2777777777777778 </unit_mult> <!-- km/hr - m/s -->
     <unit_off> 0.0 </unit_off>
   </variable>
