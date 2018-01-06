@@ -32,20 +32,23 @@ class ctrltype:
 
     # This holds control parameter specified in XML
     
-    def __init__(self,csv_file,time_res_sec,n_header_row,n_fields, \
+    def __init__(self,csv_file,time_res_sec_in,time_res_sec_out,n_header_row,n_fields, \
                  nodata_flags,grid_name_out,fill_value,missing_value, \
-                 acknowledge,history):
+                 acknowledge,history,date_format,time_format):
 
-        self.csv_file      = csv_file
-        self.time_res_sec  = time_res_sec
-        self.n_header_row  = n_header_row
-        self.n_fields      = n_fields
+        self.csv_file         = csv_file
+        self.time_res_sec_in  = time_res_sec_in
+        self.time_res_sec_out = time_res_sec_out
+        self.n_header_row     = n_header_row
+        self.n_fields         = n_fields
         self.nodata_flags  = nodata_flags
         self.grid_name_out = grid_name_out
         self.fill_value    = fill_value
         self.missing_value = missing_value
         self.acknowledge   = acknowledge
         self.history       = history
+        self.date_format   = date_format
+        self.time_format   = time_format
 
 class contype:    
 
@@ -216,10 +219,13 @@ def load_xml(xmlfile):
         variables.append(vartype(name,long_name,units,mode,col_id,unit_mult,unit_off))
     
     csv_file      = xmlroot.find('csv_file').text.strip()
-    time_res_sec  = float(xmlroot.find('time_resolution').text)
+    time_res_sec_in  = float(xmlroot.find('input_time_resolution').text)
+    time_res_sec_out = float(xmlroot.find('output_time_resolution').text)
     n_header_row  = int(xmlroot.find('n_header_row').text)
+    date_format   = xmlroot.find('date_format').text.strip()
+    time_format   = xmlroot.find('time_format').text.strip()
     n_fields      = int(xmlroot.find('n_fields').text)
-    nodata_flags  = xmlroot.find('time_resolution').text.strip()
+    nodata_flags  = xmlroot.find('nodata_flags').text.strip()
     grid_out_name = xmlroot.find('grid_name_out').text.strip()
     fill_value    = xmlroot.find('fill_value_out').text.strip()
     missing_value = xmlroot.find('missing_value_out').text.strip()
@@ -227,8 +233,9 @@ def load_xml(xmlfile):
     history       = xmlroot.find('history').text
 
 
-    ctrl_params=ctrltype(csv_file,time_res_sec,n_header_row,n_fields,nodata_flags, \
-                         grid_out_name,fill_value,missing_value,acknowledge,history)
+    ctrl_params=ctrltype(csv_file,time_res_sec_in,time_res_sec_out,n_header_row,n_fields,nodata_flags,   \
+                         grid_out_name,fill_value,missing_value,acknowledge,history, \
+                         date_format,time_format)
 
 
     return(constants,variables,ctrl_params)
@@ -328,10 +335,26 @@ def load_csv(ctrlp,variables):
                 date_str2 = rowtext[2]
                 date1,time1 = date_str1.split(' ')
                 date2,time2 = date_str2.split(' ')
-                mo1,dy1,yr1 = date1.split('/')
-                mo2,dy2,yr2 = date2.split('/')
-                hr1,mn1 = time1.split(':')
-                hr2,mn2 = time2.split(':')
+
+                if(ctrlp.date_format == 'Y-M-D'):
+                    yr1,mo1,dy1 = date1.split('-')
+                    yr2,mo2,dy2 = date2.split('-')
+                elif(ctrlp.date_format == 'M/D/Y'):
+                    mo1,dy1,yr1 = date1.split('/')
+                    mo2,dy2,yr2 = date2.split('/')
+                else:
+                    print('Incorectly specified date_format')
+                    exit(2)
+
+                if(ctrlp.time_format == 'H:M'):
+                    hr1,mn1 = time1.split(':')
+                    hr2,mn2 = time2.split(':')
+                elif(ctrlp.time_format == 'H:M:S'):
+                    hr1,mn1,sec1 = time1.split(':')
+                    hr2,mn2,sec2 = time2.split(':')
+                else:
+                    print('Incorectly specified time_format')
+                    exit(2)
 
                 iyr1 = int(yr1)
                 iyr2 = int(yr2)
@@ -367,6 +390,8 @@ def load_csv(ctrlp,variables):
 #        code.interact(local=locals())
         for var in variables:
             plt.plot_date(rawtime.datenum,var.datavec)
+#            plt.plot_date(rawtime.datenum[24280:32000],var.datavec[24280:32000])
+#            code.interact(local=locals())
             plt.title(var.name)
             plt.ylabel(var.units)
             plt.xlabel('Date') 
@@ -454,20 +479,59 @@ def main(argv):
             fp.acknowledgements = ctrl_params.acknowledge
             fp.history          = ctrl_params.history
 
-            fp.createDimension('time',len(ids))
+#            code.interact(local=locals())
+
+            # Create an averaged data vector if the input versus output
+            # resolution is different
+            n_hr_out = int(ctrl_params.time_res_sec_out/3600.0)
+            
+            ntime = d_per_mo[int(imo)-1]*24.0/float(n_hr_out)
+
+            if( ntime != float(int(ntime)) ):
+                print('Poorly specified output frequency')
+                print('Must generate an even number of time-points per day')
+                exit(2)
+
+            day_of_month = []
+            for itime in range(int(ntime)):
+                decimal_day_a = itime*(float(ctrl_params.time_res_sec_out)/86400.0)
+                day_of_month.append(decimal_day_a)
+
+            fp.createDimension('time',ntime)
             fp.createDimension('lon',1)
             fp.createDimension('lat',1)
             fp.createDimension('scalar',1)
             
             time_out    = fp.createVariable('time','f',('time',))
-            time_out[:] = timing.day[ids]-1.0
+            time_out[:] = day_of_month[:]
             time_out.units = 'days since {:04d}'.format(iyr)+'-{:02d}-01 00:00:00'.format(imo)
             time_out.calendar = 'noleap'
             time_out.long_name = 'observation time'
 
             for var in variables:
+
+                datavec_out  = []
+                for itime in range(int(ntime)):
+                    decimal_day_a = itime*(float(ctrl_params.time_res_sec_out)/86400.0)
+                    decimal_day_b = (itime+1.0)*(float(ctrl_params.time_res_sec_out)/86400.0)
+                    iday_a = int(np.floor(decimal_day_a))+1
+                    iday_b = int(np.floor(decimal_day_b))+1
+                    ihr_a  = int((decimal_day_a+1.0-float(iday_a))*86400.0/3600.0)
+                    ihr_b  = int((decimal_day_b+1.0-float(iday_b))*86400.0/3600.0)
+                    day_of_month.append(decimal_day_a)
+                
+                    datenum_a = date2num(datetime(int(iyr),int(imo),iday_a,ihr_a))
+                    datenum_b = date2num(datetime(int(iyr),int(imo),iday_b,ihr_b))
+                    ids = np.where((timing.datenum>=datenum_a) & (timing.datenum<datenum_b))[0]
+                    if(len(ids)==0):
+                        print('No time records were found in an anticipated window.')
+                        print("{}-{}-{} {}:{} to {}-{}-{} {}:{}".format(iyr,imo,iday_a,ihr_a,0,iyr,imo,iday_b,ihr_b,0))
+
+                    datavec_out.append(float(np.mean( var.datavec[ids] )))
+
+
                 var_out = fp.createVariable(var.name,'f',('time','lat','lon'))
-                var_out[:,0,0] = var.datavec[ids]
+                var_out[:,0,0] = datavec_out
                 var_out.units = var.units
                 var_out.long_name = var.long_name
                 var_out.mode = var.mode
