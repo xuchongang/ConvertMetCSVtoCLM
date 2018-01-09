@@ -9,10 +9,10 @@
   <date_format> Y-M-D </date_format>
   <time_format> H:M:S </time_format>
   <nodata_flags> NA </nodata_flags>
-  <grid_name_out> NCOut/sherman_0.1x0.1_met.v1/CLM1PT_data/ </grid_name_out>
+  <grid_name_out> NCOut/sherman_1hr_0.1x0.1_met.v1/CLM1PT_data/ </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
   <missing_value_out> 1.e+36f </missing_value_out>
-  <acknowledgements> This dataset is provisional.  Do not publish using this. </acknowledgements>
+  <acknowledgements> The original raw meteorological data were obtained from the publicly accessible data archive of the Smithsonian Institution and were collected at Fort Sherman, Panama, under the Physical Monitoring Program of the Smithsonian Tropical Research Institute. We are also grateful to the NGEE-Tropics data team for assistance in obtaining, processing and gaining permission to use the data.  Data was quality assured and checked by Boris Faybishenko of Lawrence Berkeley National Laboratory.  The QA/QC process of the BCI time series datasets included removing outliers, gap filling, and time series aggregation of non equal time steps to create equally spaced time intervals for all variables. </acknowledgements>
   <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Fri Jan  5 13:44:20 PST 2018</history>
   <constant>
     <name> ZBOT </name>

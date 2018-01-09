@@ -483,7 +483,7 @@ def main(argv):
 
             # Create an averaged data vector if the input versus output
             # resolution is different
-            n_hr_out = int(ctrl_params.time_res_sec_out/3600.0)
+            n_hr_out = ctrl_params.time_res_sec_out/3600.0
             
             ntime = d_per_mo[int(imo)-1]*24.0/float(n_hr_out)
 
@@ -494,8 +494,8 @@ def main(argv):
 
             day_of_month = []
             for itime in range(int(ntime)):
-                decimal_day_a = itime*(float(ctrl_params.time_res_sec_out)/86400.0)
-                day_of_month.append(decimal_day_a)
+                decimal_day = float(itime)*(float(ctrl_params.time_res_sec_out)/86400.0)
+                day_of_month.append(decimal_day)
 
             fp.createDimension('time',ntime)
             fp.createDimension('lon',1)
@@ -512,23 +512,32 @@ def main(argv):
 
                 datavec_out  = []
                 for itime in range(int(ntime)):
-                    decimal_day_a = itime*(float(ctrl_params.time_res_sec_out)/86400.0)
-                    decimal_day_b = (itime+1.0)*(float(ctrl_params.time_res_sec_out)/86400.0)
+                    decimal_day_a = float(itime)*(float(ctrl_params.time_res_sec_out)/86400.0)
+                    decimal_day_b = float(itime+1)*(float(ctrl_params.time_res_sec_out)/86400.0)
                     iday_a = int(np.floor(decimal_day_a))+1
                     iday_b = int(np.floor(decimal_day_b))+1
-                    ihr_a  = int((decimal_day_a+1.0-float(iday_a))*86400.0/3600.0)
-                    ihr_b  = int((decimal_day_b+1.0-float(iday_b))*86400.0/3600.0)
-                    day_of_month.append(decimal_day_a)
-                
-                    datenum_a = date2num(datetime(int(iyr),int(imo),iday_a,ihr_a))
-                    datenum_b = date2num(datetime(int(iyr),int(imo),iday_b,ihr_b))
+                    ihr_a  = np.mod(int(itime*n_hr_out),24)
+                    ihr_b  = np.mod(int((itime+1)*n_hr_out),24)
+                    imin_a = int(round(60.0*( 24.0*(decimal_day_a+1.0-float(iday_a)) - float(ihr_a)),0))
+                    imin_b = int(round(60.0*( 24.0*(decimal_day_b+1.0-float(iday_b)) - float(ihr_b)),0))
+                    imo_b = imo
+                    iyr_b = iyr
+                    if(iday_b > d_per_mo[int(imo)-1]):
+                        iday_b = 1
+                        imo_b  = imo+1
+                        if(imo_b>12):
+                            imo_b = 1
+                            iyr_b = iyr+1
+                            #print("{}-{}-{} {}:{} to {}-{}-{} {}:{}".format(iyr,imo,iday_a,ihr_a,imin_a,iyr_b,imo_b,iday_b,ihr_b,imin_b))
+                    datenum_a = date2num(datetime(int(iyr),int(imo),iday_a,ihr_a,int(imin_a)))
+                    datenum_b = date2num(datetime(int(iyr_b),int(imo_b),iday_b,ihr_b,int(imin_b)))
                     ids = np.where((timing.datenum>=datenum_a) & (timing.datenum<datenum_b))[0]
                     if(len(ids)==0):
                         print('No time records were found in an anticipated window.')
-                        print("{}-{}-{} {}:{} to {}-{}-{} {}:{}".format(iyr,imo,iday_a,ihr_a,0,iyr,imo,iday_b,ihr_b,0))
+                        print("{}-{}-{} {}:{} to {}-{}-{} {}:{}".format(iyr,imo,iday_a,ihr_a,int(imin_a),iyr,imo,iday_b,ihr_b,int(imin_b)))
+                        exit(2)
 
                     datavec_out.append(float(np.mean( var.datavec[ids] )))
-
 
                 var_out = fp.createVariable(var.name,'f',('time','lat','lon'))
                 var_out[:,0,0] = datavec_out
