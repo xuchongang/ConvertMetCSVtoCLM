@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # Parameters
 # =======================================================================================
 
-simple_verify_ts = False
+simple_verify_ts = True
 epsilon          = 0.622       # Ratio of gas constants vapor/dry air [g/g]
 e_0              = 0.611       # saturation vapor pressure at 0C Clausius-Clapeyron [kPa]
 L_vap            = 2.5*10.0**6 # Latent heat of vaporization [J/kg]
@@ -492,11 +492,14 @@ def main(argv):
                 print('Must generate an even number of time-points per day')
                 exit(2)
 
+            ntime = int(ntime)
+
             day_of_month = []
             for itime in range(int(ntime)):
                 decimal_day = float(itime)*(float(ctrl_params.time_res_sec_out)/86400.0)
                 day_of_month.append(decimal_day)
-
+            
+            
             fp.createDimension('time',ntime)
             fp.createDimension('lon',1)
             fp.createDimension('lat',1)
