@@ -635,7 +635,7 @@ def main(argv):
             for var in variables:
                 print('{}'.format(var.name))
 
-            exit(0)
+            #exit(0) !This is for debugging only
 
             for var in variables:
                 datavec_out  = []
