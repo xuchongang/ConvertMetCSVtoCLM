@@ -5,7 +5,7 @@
   <input_time_resolution> 600 </input_time_resolution> <!-- seconds -->
   <output_time_resolution> 3600 </output_time_resolution> <!-- integer multiples of 3600, evenly divisible into 24 hours -->
   <n_header_row> 1 </n_header_row>
-  <n_fields> 12 </n_fields>
+  <n_fields> 9 </n_fields>
   <nodata_flags> -9999 </nodata_flags>
   <grid_name_out> NCOut/StuntRanch/CLM1PT_data/ </grid_name_out>
   <fill_value_out> 1.e+36f </fill_value_out>
@@ -95,7 +95,7 @@
     <long_name> surface pressure at the tower </long_name>
     <units> Pa </units>
     <mode> time-dependent </mode>
-    <col_id> 12 </col_id>
+    <col_id> 9 </col_id>
     <unit_mult> 3386.389  </unit_mult> <!--Hg - Pa -->
     <unit_off> 0.0 </unit_off>
   </variable>
@@ -104,7 +104,7 @@
     <long_name> specific humidity at the tower </long_name>
     <units> kg/kg </units>
     <mode> time-dependent </mode>
-    <col_id> 6,12,5 </col_id>                     <!-- for unit_mult=-1, ids for RH,P,T                      -->
+    <col_id> 6,9,5 </col_id>                     <!-- for unit_mult=-1, ids for RH,P,T                      -->
     <unit_mult> 1.0, 3.386389, 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
     <unit_off> -1, 0.0, 0.0 </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
   </variable>
