@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<all>
+  <!-- IMPORTANT - WHEN SPECIFYING COLUMN INDICES, ASSUME THE FIRST COLUMN IS INDEX 1, NOT 0 -->
+  <csv_file> CSVData/BCI_1985_2018c_mod.csv </csv_file>
+  <input_time_resolution> 3600 </input_time_resolution> <!-- seconds -->
+  <output_time_resolution> 3600 </output_time_resolution> <!-- integer multiples of 3600, evenly divisible into 24 hours -->
+  <n_header_row> 1 </n_header_row>
+  <n_fields> 6 </n_fields>
+  <nodata_flags> NA </nodata_flags>
+  <grid_name_out> NCOut/bci_0.1x0.1_met.v5/CLM1PT_data/ </grid_name_out>
+  <fill_value_out> 1.e+36f </fill_value_out>
+  <missing_value_out> 1.e+36f </missing_value_out>
+  <utc_offset_hrs> -5 </utc_offset_hrs> <!-- what is the local time stamp if you added it to utc time? -->
+  <date_format> M/D/Y </date_format>
+  <time_format> H:M </time_format>
+  <timestamp_type> end </timestamp_type> <!-- start, end, start-end, start_utc-end_utc -->
+  <acknowledgements> Usage of this driver data must make the following acknowledgements:  Steve Paton of the Smithsonian Tropical Research Institute was involved in providing original measurements, please acknowledge as "un-published data". Acknowledge that the Smithsonian Tropical Research Institue was the provider: http://biogeodb.stri.si.edu/physical_monitoring/research/barrocolorado. Acknowledge that data was quality assured and checked by Boris Faybishenko of Lawrence Berkeley National Laboratory.  The QA/QC process of the BCI time series datasets included removing outliers, gap filling, and time series aggregation of non equal time steps to create equally spaced time intervals for all variables.  Data was formatted for CLM/ELM usage by Ryan Knox of Lawrence Berkeley National Laboratory. </acknowledgements>
+  <history> Data formatted by Ryan Knox (rgknox@lbl.gov), Mon Mar 18 11:07:55 PDT 2019 </history>
+  <constant>
+    <name> ZBOT </name>
+    <long_name> observational height </long_name>
+    <units> m </units>
+    <mode> time-invariant </mode>
+    <dims> 2 </dims>
+    <value> 30.0 </value>
+  </constant> 
+  <constant>
+    <name> LONGXY </name>
+    <long_name> longitude </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <dims> 2 </dims>
+    <value> 280.1539 </value>
+  </constant>
+  <constant>
+    <name> LATIXY </name>
+    <long_name> latitude </long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 9.1530 </value>
+    <dims> 2 </dims>
+  </constant>
+  <constant>
+    <name> EDGEE </name>
+    <long_name> eastern edge in atmospheric data </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <value> 280.2539 </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGEW </name>
+    <long_name> western edge in atmospheric data </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <value> 280.0539 </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGES </name>
+    <long_name> southern edge in atmospheric data </long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 9.0530 </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGEN </name>
+    <long_name> northern edge in atmospheric data </long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 9.2530 </value>
+    <dims> 1 </dims>
+  </constant>
+  <variable>
+    <name> PSRF </name>
+    <long_name> surface pressure at the tower </long_name>
+    <units> Pa </units>
+    <mode> time-dependent </mode>
+    <col_id> 6 </col_id>
+    <unit_mult> 0.0 </unit_mult> <!--mmHg - Pa -->
+    <unit_off> 99150.0 </unit_off>
+  </variable>
+  <variable>
+    <name> PRECTmms </name>
+    <long_name> precipitation </long_name>
+    <units> mm/s </units>
+    <mode> time-dependent </mode>
+    <col_id> 5 </col_id>
+    <unit_mult> 0.00027777777 </unit_mult> <!-- mm/h - mm/s -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> FSDS </name>
+    <long_name> incident solar radiation </long_name>
+    <units> W/m2 </units>
+    <mode> time-dependent </mode>
+    <col_id> 4 </col_id>
+    <unit_mult> 1.0 </unit_mult> <!-- w/m2 - w/m2 -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> QBOT </name>
+    <long_name> specific humidity at the tower </long_name>
+    <units> kg/kg </units>
+    <mode> time-dependent </mode>
+    <col_id> 2,3,3 </col_id>                     <!-- for unit_mult=-1, ids for RH,P,T                      -->
+    <unit_mult> 1.0, 0.0, 1.0 </unit_mult> <!-- RH must be in %, P is kPa, T is K                     -->
+    <unit_off> -1, 99.15, 273.14  </unit_off>        <!-- special flags for RH->SH (uses converted P,T and %RH) -->
+  </variable>
+  <variable>
+    <name> RH </name>
+    <long_name> relative humidity at the tower </long_name>
+    <units> % </units>
+    <mode> time-dependent </mode>
+    <col_id> 2 </col_id>       
+    <unit_mult> 1.0 </unit_mult>
+    <unit_off> 0.0  </unit_off>
+  </variable>
+  <variable>
+    <name> TBOT </name>
+    <long_name> temperature at the tower </long_name>
+    <units> K </units>
+    <mode> time-dependent </mode>
+    <col_id> 3 </col_id>
+    <unit_off> 273.14 </unit_off> <!-- C - K-->
+    <unit_mult> 1.0 </unit_mult>
+  </variable>
+  <variable>
+    <name> WIND </name>
+    <long_name> wind at the lowest atm level </long_name>
+    <units> m/s </units>
+    <mode> time-dependent </mode>
+    <col_id> 6 </col_id>
+    <unit_mult> 0.2777777777777778 </unit_mult> <!-- km/hr - m/s -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+</all>
