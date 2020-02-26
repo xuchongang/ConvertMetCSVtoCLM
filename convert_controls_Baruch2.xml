@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<all>
+  <!-- IMPORTANT - WHEN SPECIFYING COLUMN INDICES, ASSUME THE FIRST COLUMN IS INDEX 1, NOT 0 -->
+  <csv_file> CSVData/Climate_Baruch_2001-2014.csv </csv_file>
+  <input_time_resolution> 10800 </input_time_resolution> <!-- seconds -->
+  <output_time_resolution> 86400 </output_time_resolution> <!-- integer multiples of 3600, evenly divisible into 24 hours -->
+  <n_header_row> 1 </n_header_row>
+  <n_fields> 10 </n_fields>
+  <nodata_flags> -9999 </nodata_flags>
+  <grid_name_out> NCOut/Baruch/CLM1PT_data/</grid_name_out>
+  <fill_value_out> 1.e+36f </fill_value_out>
+  <missing_value_out> 1.e+36f </missing_value_out>
+  <utc_offset_hrs> -5 </utc_offset_hrs> <!-- what is the local time stamp if you added it to utc time? -->
+  <date_format> M/D/Y </date_format>
+  <time_format> H:M </time_format>
+  <timestamp_type> start </timestamp_type> <!-- start, end, start-end, start_utc-end_utc -->  
+  <acknowledgements> This data is from Western Regional Climate Center:  Data was formatted for CLM/ELM usage by Ryan Knox of Los Alamos National Laboratory. </acknowledgements>
+  <history> Data was formatted by Chonggang Xu (cxu@lanl.gov), Sep 10, 2019 </history>
+  <constant>
+    <name> ZBOT </name>
+    <long_name> observational height </long_name>
+    <units> m </units>
+    <mode> time-invariant </mode>
+    <dims> 2 </dims>
+    <value> 10.0 </value>
+  </constant>
+  <constant>
+    <name> LONGXY </name>
+    <long_name> longitude </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <dims> 2 </dims>
+    <value> 280.81 </value>
+  </constant>
+  <constant>
+    <name> LATIXY </name>
+    <long_name>  latitude</long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 33.335 </value>
+    <dims> 2 </dims>
+  </constant>
+  <constant>
+    <name> EDGEE </name>
+    <long_name> eastern edge in atmospheric data </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <value> 280.71 </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGEW </name>
+    <long_name> western edge in atmospheric data </long_name>
+    <units> degrees_east </units>
+    <mode> time-invariant </mode>
+    <value> 280.91 </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGES </name>
+    <long_name> southern edge in atmospheric data </long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 33.235  </value>
+    <dims> 1 </dims>
+  </constant>
+  <constant>
+    <name> EDGEN </name>
+    <long_name> northern edge in atmospheric data </long_name>
+    <units> degrees_north </units>
+    <mode> time-invariant </mode>
+    <value> 33.435 </value>
+    <dims> 1 </dims>
+  </constant>
+  <variable>
+    <name> PRECTmms </name>
+    <long_name> precipitation </long_name>
+    <units> mm/s </units>
+    <mode> time-dependent </mode>
+    <col_id> 4 </col_id>
+    <unit_mult> 1.0 </unit_mult> <!-- mm/s - mm/s -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> QBOT </name>
+    <long_name> specific humidity at the tower </long_name>
+    <units> Kg water/total air mass </units>
+    <mode> time-dependent </mode>
+    <col_id> 2 </col_id>
+    <unit_mult> 1.0</unit_mult> <!--Kg water/total air mass -Kg water/total air mass -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> FSDS </name>
+    <long_name> incident solar radiation </long_name>
+    <units> W/m2 </units>
+    <mode> time-dependent </mode>
+    <col_id> 5 </col_id>
+    <unit_mult> 1.0 </unit_mult> <!-- w/m2 - w/m2 -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> PSRF </name>
+    <long_name> surface pressure at the tower </long_name>
+    <units> Pa </units>
+    <mode> time-dependent </mode>
+    <col_id> 6 </col_id>
+    <unit_mult> 1.0  </unit_mult> <!--Pa - Pa -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> RH </name>
+    <long_name> relative humidity at the tower </long_name>
+    <units> % </units>
+    <mode> time-dependent </mode>
+    <col_id> 9 </col_id>       
+    <unit_mult> 1.0 </unit_mult>
+    <unit_off> 0.0  </unit_off>
+  </variable>
+  <variable>
+    <name> TBOT </name>
+    <long_name> temperature at the tower </long_name>
+    <units> K </units>
+    <mode> time-dependent </mode>
+    <col_id> 3 </col_id>
+    <unit_off> 0 </unit_off> <!-- K - K-->
+    <unit_mult> 1.0 </unit_mult>
+  </variable>
+  <variable>
+    <name> WIND </name>
+    <long_name> wind at the lowest atm level </long_name>
+    <units> m/s </units>
+    <mode> time-dependent </mode>
+    <col_id> 7 </col_id>
+    <unit_mult> 1.0</unit_mult> <!-- m/s - m/s -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> SALT </name>
+    <long_name> Salinity </long_name>
+    <units> ppt </units>
+    <mode> time-dependent </mode>
+    <col_id> 10 </col_id>
+    <unit_mult> 1.0</unit_mult> <!-- ppt - ppt -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+  <variable>
+    <name> FLDS </name>
+    <long_name> Longwave radiation </long_name>
+    <units> w/m2 </units>
+    <mode> time-dependent </mode>
+    <col_id> 8 </col_id>
+    <unit_mult> 1.0</unit_mult> <!-- w/m2 - w/m2 -->
+    <unit_off> 0.0 </unit_off>
+  </variable>
+</all>
